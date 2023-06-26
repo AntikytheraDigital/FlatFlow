@@ -3,11 +3,14 @@ import Link from "next/link";
 import { api } from "~/utils/api";
 import { SignIn, SignInButton, SignOutButton, useUser } from "@clerk/nextjs";
 import { use } from "react";
+import { LoadingPage } from "~/components/loading";
 
 export default function Home() {
-  const hello = api.example.hello.useQuery({ text: "from tRPC" });
+  const { isLoading } = api.example.hello.useQuery({ text: "from tRPC" });
 
   const user = useUser();
+
+  if (isLoading) return <LoadingPage />;
 
   return (
     <>
