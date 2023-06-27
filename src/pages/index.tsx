@@ -1,16 +1,45 @@
 import Head from "next/head";
-import Link from "next/link";
 import { api } from "~/utils/api";
-import { SignIn, SignInButton, SignOutButton, useUser } from "@clerk/nextjs";
-import { use } from "react";
-import { LoadingPage } from "~/components/loading";
+import {
+  SignInButton,
+  SignOutButton,
+  SignedIn,
+  SignedOut,
+  useUser,
+} from "@clerk/nextjs";
+import { LoadingPage, LoadingSpinner } from "~/components/loading";
+
+const CreateFlat = () => {
+  const { user } = useUser();
+
+  //const ctx = api.useContext();
+
+  const { mutate, isLoading: isCreating } = api.flat.createFlat.useMutation({
+    onSuccess: () => {
+      console.log("success");
+    },
+    onError: (error) => {
+      console.log(error);
+    },
+  });
+
+  const handleCreateFlat = () => {
+    mutate();
+  };  
+
+  if (!user) return null;
+
+  return (
+    <button onClick={handleCreateFlat} disabled={isCreating}>
+      {isCreating ? <LoadingSpinner size={20} /> : "Create Flat"}
+    </button>
+  );
+};
 
 export default function Home() {
-  const { isLoading } = api.example.hello.useQuery({ text: "from tRPC" });
+  const { isLoaded: userIsLoaded, isSignedIn } = useUser();
 
-  const user = useUser();
-
-  if (isLoading) return <LoadingPage />
+  if (!userIsLoaded) return <LoadingPage />;
 
   return (
     <>
@@ -21,7 +50,15 @@ export default function Home() {
       </Head>
       <main className="flex justify-center">
         <div>
-          {!user.isSignedIn && <SignInButton />}{!!user.isSignedIn && <SignOutButton />}
+          <SignedIn>
+            <SignOutButton />
+            <div>
+              <CreateFlat />
+            </div>
+          </SignedIn>
+          <SignedOut>
+            <SignInButton />
+          </SignedOut>
         </div>
       </main>
     </>
