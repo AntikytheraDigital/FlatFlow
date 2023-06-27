@@ -11,8 +11,17 @@ generator client {
   provider = "prisma-client-js"
 }
 
-model Example {
-    id        String   @id @default(cuid())
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
+model Flat {
+  id        Int        @id @default(autoincrement())
+  createdAt DateTime @default(now())
+  updatedAt DateTime   @updatedAt
+  UserFlats UserFlat[]
+}
+
+model UserFlat {
+  userId String @id
+  flatId Int
+  Flat   Flat   @relation(fields: [flatId], references: [id])
+
+  @@index([flatId])
 }
