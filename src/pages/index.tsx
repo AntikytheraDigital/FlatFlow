@@ -1,8 +1,6 @@
 import Head from "next/head";
-import { useCallback, useState } from "react";
 import { api } from "~/utils/api";
 import {
-  SignIn,
   SignInButton,
   SignOutButton,
   SignedIn,
@@ -14,7 +12,7 @@ import { LoadingPage, LoadingSpinner } from "~/components/loading";
 const CreateFlat = () => {
   const { user } = useUser();
 
-  const ctx = api.useContext();
+  //const ctx = api.useContext();
 
   const { mutate, isLoading: isCreating } = api.flat.createFlat.useMutation({
     onSuccess: () => {
@@ -25,13 +23,9 @@ const CreateFlat = () => {
     },
   });
 
-  const handleCreateFlat = async () => {
-    try {
-      await mutate();
-    } catch (error) {
-      console.log(error);
-    }
-  };
+  const handleCreateFlat = () => {
+    mutate();
+  };  
 
   if (!user) return null;
 
