@@ -45,7 +45,7 @@ const CreateFlat = () => {
 export default function Home() {
   const { isLoaded: userIsLoaded, isSignedIn } = useUser();
 
-  if (!userIsLoaded) return <LoadingPage />
+  if (!userIsLoaded) return <LoadingPage />;
 
   return (
     <>
