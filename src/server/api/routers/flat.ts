@@ -9,26 +9,11 @@ export const flatRouter = createTRPCRouter({
   getAll: publicProcedure.query(({ ctx }) => {
     return ctx.prisma.flat.findMany();
   }),
-  getUserFlat: publicProcedure
-    .input(z.object({ userId: z.string(), flatId: z.number() }))
-    .query(async ({ input, ctx }) => {
-      const userFlat = await ctx.prisma.userFlat.findFirst({
-        where: {
-          userId: input.userId,
-          flatId: input.flatId,
-        },
-        include: {
-          Flat: true,
-        },
-      });
-
-      // Check if a UserFlat was found and return the associated Flat
-      if (userFlat) {
-        return userFlat.Flat;
-      }
-
-      // If no UserFlat was found, return an error
-      throw new Error("No Flat found for this User ID and Flat ID");
+  getUserFlatByUserId: privateProcedure.query(
+    ({ ctx }) => {
+        return ctx.prisma.userFlat.findUnique({
+            where: { userId: ctx.currentUser },
+        });
     }),
   createFlat: privateProcedure.mutation(async ({ ctx }) => {
     const userId = ctx.currentUser;

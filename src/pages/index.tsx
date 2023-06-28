@@ -25,7 +25,7 @@ const CreateFlat = () => {
 
   const handleCreateFlat = () => {
     mutate();
-  };  
+  };
 
   if (!user) return null;
 
@@ -33,6 +33,28 @@ const CreateFlat = () => {
     <button onClick={handleCreateFlat} disabled={isCreating}>
       {isCreating ? <LoadingSpinner size={20} /> : "Create Flat"}
     </button>
+  );
+};
+/**
+ * Test code. Needs to be removed.
+ */
+const ShowFlat = () => {
+  const { user } = useUser();
+
+  const { data: userFlat, isLoading } = api.flat.getUserFlatByUserId.useQuery();
+
+  const handleShowFlat = () => {
+    // You may want to refresh the data here, or handle it in another way.
+  };
+
+  if (!user) return null;
+
+  return (
+    <><button onClick={handleShowFlat} disabled={isLoading}>
+      {isLoading ? <LoadingSpinner size={20} /> : "Show Flat"}
+    </button><div>
+        {userFlat && <p>Your flat ID is: {userFlat.flatId}</p>}
+      </div></>
   );
 };
 
@@ -54,6 +76,9 @@ export default function Home() {
             <SignOutButton />
             <div>
               <CreateFlat />
+            </div>
+            <div>
+              <ShowFlat />
             </div>
           </SignedIn>
           <SignedOut>
