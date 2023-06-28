@@ -22,15 +22,24 @@ const FlatPage: NextPage = () => {
 
       setFlatId(flatIdFromRouter);
 
-      if (!isLoading && userFlatData && flatIdFromRouter !== userFlatData.flatId) {
-        // If the user's flatId does not match the flat_id from the URL, redirect to home
-        router.push("/");
+      if (
+        !isLoading &&
+        userFlatData &&
+        flatIdFromRouter !== userFlatData.flatId
+      ) {
+        // If the user's flatId does not match the flat_id from the URL, redirect to home. This should have error handling for promise.
+        void router.push("/");
       }
     }
   }, [isLoading, userFlatData, router]);
 
   // Show loading until we have all necessary data and checks
-  if (isLoading || !userFlatData || flatId === null || flatId !== userFlatData.flatId) {
+  if (
+    isLoading ||
+    !userFlatData ||
+    flatId === null ||
+    flatId !== userFlatData.flatId
+  ) {
     return (
       <div>
         <LoadingPage />
