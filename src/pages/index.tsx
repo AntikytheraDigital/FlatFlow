@@ -38,25 +38,25 @@ const CreateFlat = () => {
 /**
  * Test code. Needs to be removed.
  */
-const ShowFlat = () => {
-  const { user } = useUser();
+// const ShowFlat = () => {
+//   const { user } = useUser();
 
-  const { data: userFlat, isLoading } = api.flat.getUserFlatByUserId.useQuery();
+// const { data: userFlat, isLoading } = api.flat.getUserFlatByUserId.useQuery();
 
-  const handleShowFlat = () => {
-    // You may want to refresh the data here, or handle it in another way.
-  };
+//   const handleShowFlat = () => {
+//     // You may want to refresh the data here, or handle it in another way.
+//   };
 
-  if (!user) return null;
+//   if (!user) return null;
 
-  return (
-    <><button onClick={handleShowFlat} disabled={isLoading}>
-      {isLoading ? <LoadingSpinner size={20} /> : "Show Flat"}
-    </button><div>
-        {userFlat && <p>Your flat ID is: {userFlat.flatId}</p>}
-      </div></>
-  );
-};
+//   return (
+//     <><button onClick={handleShowFlat} disabled={isLoading}>
+//       {isLoading ? <LoadingSpinner size={20} /> : "Show Flat"}
+//     </button><div>
+//         {userFlat && <p>Your flat ID is: {userFlat.flatId}</p>}
+//       </div></>
+//   );
+// };
 
 export default function Home() {
   const { isLoaded: userIsLoaded, isSignedIn } = useUser();
@@ -78,7 +78,6 @@ export default function Home() {
               <CreateFlat />
             </div>
             <div>
-              <ShowFlat />
             </div>
           </SignedIn>
           <SignedOut>

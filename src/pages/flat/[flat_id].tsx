@@ -2,7 +2,7 @@ import type { NextPage} from "next";
 import Head from "next/head";
 import { api } from "~/utils/api"
 const FlatPage: NextPage<{ id: number }> = ({ id }) => {
-    const { data } = api.flat.getUserFlatByUserId.useQuery();
+    const { data } = api.flat.getUserFlatByUserId.useQuery({id});
     if (!data) return <div>404</div>;
 
     return (
