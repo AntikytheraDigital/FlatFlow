@@ -9,7 +9,7 @@ export const flatRouter = createTRPCRouter({
   getAll: publicProcedure.query(({ ctx }) => {
     return ctx.prisma.flat.findMany();
   }),
-  getUserFlatByUserId: privateProcedure
+  getUserFlatByFlatIdAndContext: privateProcedure
   .input(z.object({ id: z.number()}))
   .query(async ({ ctx, input }) => {
         return await ctx.prisma.userFlat.findUnique({
