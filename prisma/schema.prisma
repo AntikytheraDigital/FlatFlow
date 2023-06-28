@@ -16,12 +16,32 @@ model Flat {
   createdAt DateTime @default(now())
   updatedAt DateTime   @updatedAt
   UserFlats UserFlat[]
+  Schedule Schedule?
+  joinUrl String 
+  dinnerThreshold Int @default(2)
+}
+
+model User {
+  userId String @id
+  name String @default("None")
+  color String
+}
+
+model Schedule{
+  flatId Int @id
+  Flat Flat @relation(fields: [flatId], references: [id])
+  schedule String
+  availability String
+
+  @@index([flatId])
 }
 
 model UserFlat {
-  userId String @id
-  flatId Int
+  userId String 
+  flatId Int 
   Flat   Flat   @relation(fields: [flatId], references: [id])
-
+  availability String
+  
   @@index([flatId])
+  @@id([userId, flatId])
 }
