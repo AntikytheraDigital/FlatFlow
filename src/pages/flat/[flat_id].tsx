@@ -16,6 +16,20 @@ const FlatPage: NextPage = () => {
     id: flat_id
   });
 
+  const { mutate: removeUserFromFlat, isLoading: isLeaving } = api.flat.removeUserFromUserFlat.useMutation({
+    onSuccess: () => {
+      // On successful leave, redirect to home
+      void router.push("/");
+    },
+    onError: (error) => {
+      console.log(error);
+    },
+  });
+
+  const handleLeaveFlat = () => {
+    removeUserFromFlat({ id: flat_id });
+  };
+
   useEffect(() => {
     if (!isLoading && (!userFlatData || flat_id !== userFlatData.flatId)) {
       // If the user doesn't have a flatId, or if the user's flatId does not match the flat_id from the URL, redirect to home
@@ -44,7 +58,10 @@ const FlatPage: NextPage = () => {
       </div>
       <div>
         <h2>{`Flat page view for flatid: ${flat_id}`}</h2>
-        </div>
+      </div>
+      <button onClick={handleLeaveFlat} disabled={isLeaving}>
+        {isLeaving ? "Leaving..." : "Leave this flat"}
+      </button>
     </>
   );
 };

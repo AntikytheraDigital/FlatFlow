@@ -81,5 +81,46 @@ export const flatRouter = createTRPCRouter({
 
       return flat;
     }),
+    removeUserFromUserFlat: privateProcedure
+    .input(z.object({ id: z.number() }))
+    .mutation(async ({ ctx, input }) => {
+      const userId = ctx.currentUser;
 
+      // Check if the flat exists
+      const flat = await ctx.prisma.flat.findUnique({
+        where: {
+          id: input.id,
+        },
+      });
+
+      if (!flat) {
+        throw new TRPCError({ code: "NOT_FOUND" });
+      }
+
+      // Check if the user is in the flat
+      const userFlat = await ctx.prisma.userFlat.findUnique({
+        where: {
+          userId_flatId: {
+            userId: userId,
+            flatId: input.id,
+          },
+        },
+      });
+
+      // If user is in the flat, remove them
+      if (userFlat) {
+        await ctx.prisma.userFlat.delete({
+          where: {
+            userId_flatId: {
+              userId: userId,
+              flatId: input.id,
+            },
+          },
+        });
+      } else {
+        throw new TRPCError({ code: "BAD_REQUEST", message: "User is not associated with this flat" });
+      }
+
+      return flat;
+    }),
 });
