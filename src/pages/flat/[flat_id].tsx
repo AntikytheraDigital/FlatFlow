@@ -19,7 +19,7 @@ const FlatPage: NextPage = () => {
   useEffect(() => {
     if (!isLoading && (!userFlatData || flat_id !== userFlatData.flatId)) {
       // If the user doesn't have a flatId, or if the user's flatId does not match the flat_id from the URL, redirect to home
-      router.push("/");
+      void router.push("/");
     }
   }, [isLoading, userFlatData, flat_id, router]);
   
@@ -30,8 +30,8 @@ const FlatPage: NextPage = () => {
     </div>;
   }
 
-  if (!userFlatData) {
-    return <div>404</div>;
+  if (!userFlatData || flat_id !== userFlatData.flatId) {
+    return null;
   }
 
   return (
