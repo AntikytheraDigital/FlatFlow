@@ -22,6 +22,22 @@ export const flatRouter = createTRPCRouter({
         },
       });
     }),
+  getAllUserIdsInUserFlat: privateProcedure
+    .input(z.object({ id: z.number() }))
+    .query(async ({ ctx, input }) => {
+      // Fetch all UserFlat records associated with the flatId
+      const userFlats = await ctx.prisma.userFlat.findMany({
+        where: {
+          flatId: input.id,
+        },
+      });
+
+      // Fetch all Users associated with UserFlat records
+      const usersIds = userFlats.map((userFlat) => userFlat.userId);
+
+      return usersIds;
+    }),
+
   createFlat: privateProcedure.mutation(async ({ ctx }) => {
     const userId = ctx.currentUser;
 
@@ -76,12 +92,15 @@ export const flatRouter = createTRPCRouter({
           },
         });
       } else {
-        throw new TRPCError({ code: "BAD_REQUEST", message: "User is already associated with this flat" });
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "User is already associated with this flat",
+        });
       }
 
       return flat;
     }),
-    removeUserFromUserFlat: privateProcedure
+  removeUserFromUserFlat: privateProcedure
     .input(z.object({ id: z.number() }))
     .mutation(async ({ ctx, input }) => {
       const userId = ctx.currentUser;
@@ -118,7 +137,10 @@ export const flatRouter = createTRPCRouter({
           },
         });
       } else {
-        throw new TRPCError({ code: "BAD_REQUEST", message: "User is not associated with this flat" });
+        throw new TRPCError({
+          code: "BAD_REQUEST",
+          message: "User is not associated with this flat",
+        });
       }
 
       return flat;
