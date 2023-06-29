@@ -9,23 +9,20 @@ export const flatRouter = createTRPCRouter({
   getAll: publicProcedure.query(({ ctx }) => {
     return ctx.prisma.flat.findMany();
   }),
-  getUserFlatByUserId: privateProcedure.query(
-    ({ ctx }) => {
-        return ctx.prisma.userFlat.findUnique({
-            where: { userId: ctx.currentUser },
+  getUserFlatByFlatIdAndContext: privateProcedure
+  .input(z.object({ id: z.number()}))
+  .query(async ({ ctx, input }) => {
+        return await ctx.prisma.userFlat.findUnique({
+            where: {
+              userId_flatId: {
+                userId: ctx.currentUser,
+                flatId: input.id
+              }
+             },
         });
     }),
   createFlat: privateProcedure.mutation(async ({ ctx }) => {
     const userId = ctx.currentUser;
-
-    // Check if the user is already associated with a flat
-    const existingUserFlat = await ctx.prisma.userFlat.findUnique({
-      where: { userId: userId },
-    });
-
-    if (existingUserFlat) {
-      throw new Error("User is already associated with a flat");
-    }
 
     // If not, create a new flat
     const flat = await ctx.prisma.flat.create({
