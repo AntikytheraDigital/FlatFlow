@@ -1,3 +1,4 @@
+import { TRPCError } from "@trpc/server";
 import { z } from "zod";
 import {
   createTRPCRouter,
@@ -10,16 +11,16 @@ export const flatRouter = createTRPCRouter({
     return ctx.prisma.flat.findMany();
   }),
   getUserFlatByFlatIdAndContext: privateProcedure
-  .input(z.object({ id: z.number()}))
-  .query(async ({ ctx, input }) => {
-        return await ctx.prisma.userFlat.findUnique({
-            where: {
-              userFlatId: {
-                userId: ctx.currentUser,
-                flatId: input.id
-              }
-             },
-        });
+    .input(z.object({ id: z.number() }))
+    .query(async ({ ctx, input }) => {
+      return await ctx.prisma.userFlat.findUnique({
+        where: {
+          userFlatId: {
+            userId: ctx.currentUser,
+            flatId: input.id,
+          },
+        },
+      });
     }),
   createFlat: privateProcedure.mutation(async ({ ctx }) => {
     const userId = ctx.currentUser;
@@ -40,4 +41,86 @@ export const flatRouter = createTRPCRouter({
     // Return the new flat
     return flat;
   }),
+  addUserToUserFlat: privateProcedure
+    .input(z.object({ id: z.number() }))
+    .mutation(async ({ ctx, input }) => {
+      const userId = ctx.currentUser;
+
+      // Check if the flat exists
+      const flat = await ctx.prisma.flat.findUnique({
+        where: {
+          id: input.id,
+        },
+      });
+
+      if (!flat) {
+        throw new TRPCError({ code: "NOT_FOUND" });
+      }
+
+      // Check if the user is already in the flat
+      const userFlat = await ctx.prisma.userFlat.findUnique({
+        where: {
+          userId_flatId: {
+            userId: userId,
+            flatId: input.id,
+          },
+        },
+      });
+
+      // If not, associate the user with the flat
+      if (!userFlat) {
+        await ctx.prisma.userFlat.create({
+          data: {
+            userId: userId,
+            flatId: input.id,
+          },
+        });
+      } else {
+        throw new TRPCError({ code: "BAD_REQUEST", message: "User is already associated with this flat" });
+      }
+
+      return flat;
+    }),
+    removeUserFromUserFlat: privateProcedure
+    .input(z.object({ id: z.number() }))
+    .mutation(async ({ ctx, input }) => {
+      const userId = ctx.currentUser;
+
+      // Check if the flat exists
+      const flat = await ctx.prisma.flat.findUnique({
+        where: {
+          id: input.id,
+        },
+      });
+
+      if (!flat) {
+        throw new TRPCError({ code: "NOT_FOUND" });
+      }
+
+      // Check if the user is in the flat
+      const userFlat = await ctx.prisma.userFlat.findUnique({
+        where: {
+          userId_flatId: {
+            userId: userId,
+            flatId: input.id,
+          },
+        },
+      });
+
+      // If user is in the flat, remove them
+      if (userFlat) {
+        await ctx.prisma.userFlat.delete({
+          where: {
+            userId_flatId: {
+              userId: userId,
+              flatId: input.id,
+            },
+          },
+        });
+      } else {
+        throw new TRPCError({ code: "BAD_REQUEST", message: "User is not associated with this flat" });
+      }
+
+      return flat;
+    }),
 });

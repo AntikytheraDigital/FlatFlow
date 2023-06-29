@@ -8,6 +8,7 @@ import {
   useUser,
 } from "@clerk/nextjs";
 import { LoadingPage, LoadingSpinner } from "~/components/loading";
+import { useState } from "react";
 
 const CreateFlat = () => {
   const { user } = useUser();
@@ -35,28 +36,53 @@ const CreateFlat = () => {
     </button>
   );
 };
+
 /**
- * Test code. Needs to be removed.
+ * Test code for joining flat. Needs to be removed.
  */
-// const ShowFlat = () => {
-//   const { user } = useUser();
+  const JoinFlat = () => {
+    const { user } = useUser();
+    const [flatId, setFlatId] = useState("");
+    const [successMessage, setSuccessMessage] = useState("");
+    
+    const { mutate, isLoading: isJoining } = api.flat.addUserToUserFlat.useMutation({
+      onSuccess: (flat) => {
+        setSuccessMessage(`Successfully joined flat: ${flat.id}`);
+        setFlatId("");
+      },
+      onError: (error) => {
+        console.log(error);
+      },
+    });
 
-// const { data: userFlat, isLoading } = api.flat.getUserFlatByUserId.useQuery();
+    const handleJoinFlat = (event: { preventDefault: () => void; }) => {
+      event.preventDefault();
 
-//   const handleShowFlat = () => {
-//     // You may want to refresh the data here, or handle it in another way.
-//   };
+      if (!user) return;
+      if (!flatId) return;
 
-//   if (!user) return null;
+      mutate({ id: Number(flatId) });
+    };
 
-//   return (
-//     <><button onClick={handleShowFlat} disabled={isLoading}>
-//       {isLoading ? <LoadingSpinner size={20} /> : "Show Flat"}
-//     </button><div>
-//         {userFlat && <p>Your flat ID is: {userFlat.flatId}</p>}
-//       </div></>
-//   );
-// };
+    return (
+      <div>
+        <form onSubmit={handleJoinFlat} className="flex items-center space-x-2">
+          <input 
+            type="text" 
+            placeholder="Flat ID" 
+            value={flatId} 
+            onChange={(event) => setFlatId(event.target.value)}
+            disabled={isJoining}
+            className="bg-transparent border-b border-gray-500 focus:outline-none"
+          />
+          <button type="submit" disabled={isJoining} className="bg-transparent">
+            {isJoining ? <LoadingSpinner size={20} /> : "Join Flat"}
+          </button>
+        </form>
+        {successMessage && <p>{successMessage}</p>}
+      </div>
+    );
+  };
 
 export default function Home() {
   const { isLoaded: userIsLoaded, isSignedIn } = useUser();
@@ -78,6 +104,7 @@ export default function Home() {
               <CreateFlat />
             </div>
             <div>
+              <JoinFlat />
             </div>
           </SignedIn>
           <SignedOut>
