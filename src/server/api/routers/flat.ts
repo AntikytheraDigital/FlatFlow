@@ -14,7 +14,7 @@ export const flatRouter = createTRPCRouter({
   .query(async ({ ctx, input }) => {
         return await ctx.prisma.userFlat.findUnique({
             where: {
-              userId_flatId: {
+              userFlatId: {
                 userId: ctx.currentUser,
                 flatId: input.id
               }
