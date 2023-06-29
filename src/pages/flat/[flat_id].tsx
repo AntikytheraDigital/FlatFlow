@@ -16,6 +16,12 @@ const FlatPage: NextPage = () => {
     id: flat_id
   });
 
+  const { data: userIds, isLoading: isUserIdLoading } = api.flat.getAllUserIdsInUserFlat.useQuery({
+    id: flat_id,
+  }, {
+    enabled: !isLoading, // Enable the query only after userFlatData has loaded
+  });
+
   const { mutate: removeUserFromFlat, isLoading: isLeaving } = api.flat.removeUserFromUserFlat.useMutation({
     onSuccess: () => {
       // On successful leave, redirect to home
@@ -58,6 +64,13 @@ const FlatPage: NextPage = () => {
       </div>
       <div>
         <h2>{`Flat page view for flatid: ${flat_id}`}</h2>
+      </div>
+      <div>
+        {isUserIdLoading ? (
+          <p>Loading user IDs...</p>
+        ) : (
+          <h2>{`User IDs in this flat: ${userIds ? userIds.join(', ') : 'id_missing'}`}</h2>
+          )}
       </div>
       <button onClick={handleLeaveFlat} disabled={isLeaving}>
         {isLeaving ? "Leaving..." : "Leave this flat"}
