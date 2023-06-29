@@ -44,4 +44,5 @@ model UserFlat {
 
   @@index([flatId])
   @@id([userId, flatId])
+  @@unique([userId, flatId], name: "userFlatId")
 }
