@@ -1,5 +1,6 @@
 import { createTRPCRouter } from "~/server/api/trpc";
 import { flatRouter } from "./routers/flat";
+import { profileRouter } from "./routers/profile";
 
 /**
  * This is the primary router for your server.
@@ -8,6 +9,7 @@ import { flatRouter } from "./routers/flat";
  */
 export const appRouter = createTRPCRouter({
   flat: flatRouter,
+  profile: profileRouter,
 });
 
 // export type definition of API

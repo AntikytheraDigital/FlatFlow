@@ -40,7 +40,12 @@ export const flatRouter = createTRPCRouter({
 
   createFlat: privateProcedure.mutation(async ({ ctx }) => {
     const userId = ctx.currentUser;
-
+    // Creates tuple in User from userId if it doesn't exist
+    await ctx.prisma.user.create({
+      data: {
+        userId: ctx.currentUser,
+      },
+    });
     // If not, create a new flat
     const flat = await ctx.prisma.flat.create({
       data: {},
