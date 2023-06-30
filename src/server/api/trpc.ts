@@ -33,9 +33,10 @@ type CreateContextOptions = Record<string, never>;
  *
  * @see https://create.t3.gg/en/usage/trpc#-serverapitrpcts
  */
-const createInnerTRPCContext = (_opts: CreateContextOptions) => {
+export const createInnerTRPCContext = (_opts: CreateContextOptions) => {
   return {
     prisma,
+    currentUser: null,
   };
 };
 

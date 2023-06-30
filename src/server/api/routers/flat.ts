@@ -10,6 +10,18 @@ export const flatRouter = createTRPCRouter({
   getAll: publicProcedure.query(({ ctx }) => {
     return ctx.prisma.flat.findMany();
   }),
+  getUserFlatByFlatIdAndUserId: publicProcedure
+    .input(z.object({ flat_id: z.number(), user_id: z.string() }))
+    .query(async ({ ctx, input }) => {
+      return await ctx.prisma.userFlat.findUnique({
+        where: {
+          userFlatId: {
+            userId: input.user_id,
+            flatId: input.flat_id,
+          },
+        },
+      });
+    }),
   getUserFlatByFlatIdAndContext: privateProcedure
     .input(z.object({ id: z.number() }))
     .query(async ({ ctx, input }) => {
@@ -21,6 +33,21 @@ export const flatRouter = createTRPCRouter({
           },
         },
       });
+    }),
+  getAllUserIdsInUserFlatByFlatId: publicProcedure
+    .input(z.object({ id: z.number() }))
+    .query(async ({ ctx, input }) => {
+      // Fetch all UserFlat records associated with the flatId
+      const userFlats = await ctx.prisma.userFlat.findMany({
+        where: {
+          flatId: input.id,
+        },
+      });
+
+      // Fetch all Users associated with UserFlat records
+      const usersIds = userFlats.map((userFlat) => userFlat.userId);
+
+      return usersIds;
     }),
   getAllUserIdsInUserFlat: privateProcedure
     .input(z.object({ id: z.number() }))
