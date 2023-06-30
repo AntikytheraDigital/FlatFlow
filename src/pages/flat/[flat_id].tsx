@@ -14,6 +14,7 @@ import { createContext } from "vm";
 import { createInnerTRPCContext, createTRPCContext } from "~/server/api/trpc";
 import { clerkClient, currentUser } from "@clerk/nextjs";
 import { getAuth } from "@clerk/nextjs/dist/types/server";
+import Image from "next/image";
 
 type UserProfile = {
   id: string;
@@ -43,10 +44,12 @@ const FlatPage: NextPage<FlatPageProps> = ({ flat_id, flatmates }) => {
               key={flatmate.id}
               className="flex flex-col items-center rounded border p-4 shadow-md"
             >
-              <img
+              <Image
                 src={flatmate.picture}
-                alt={`${flatmate.firstName}'s picture`}
-                className="mb-4 h-24 w-24 rounded-full"
+                alt={flatmate.firstName ? flatmate.firstName : "First Name"}
+                width={100}
+                height={100}
+                className="rounded-full"
               />
               <h2 className="text-xl">{flatmate.firstName}</h2>
               <p className="text-sm text-gray-600">{flatmate.id}</p>
