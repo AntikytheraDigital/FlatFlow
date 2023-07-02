@@ -1,20 +1,9 @@
-import superjson from "superjson";
-import { createServerSideHelpers } from "@trpc/react-query/server";
-import {
-  type GetServerSidePropsContext,
-  InferGetServerSidePropsType,
-  type NextPage,
-} from "next";
+import { type NextPage, type GetServerSideProps } from "next";
 import { useRouter } from "next/router";
 import Head from "next/head";
-import { prisma } from "~/server/db";
-import { appRouter } from "~/server/api/root";
-import { api } from "~/utils/api";
-import { createContext } from "vm";
-import { createInnerTRPCContext, createTRPCContext } from "~/server/api/trpc";
-import { clerkClient, currentUser } from "@clerk/nextjs";
 import { getAuth } from "@clerk/nextjs/server";
 import Image from "next/image";
+import { ssgHelper } from "~/server/api/helpers/ssgHelper";
 
 type UserProfile = {
   id: string;
@@ -61,15 +50,8 @@ const FlatPage: NextPage<FlatPageProps> = ({ flat_id, flatmates }) => {
   );
 };
 
-export const getServerSideProps = async (
-  ctx: GetServerSidePropsContext<{ flat_id: string }>
-) => {
-  const ssg = createServerSideHelpers({
-    router: appRouter,
-    ctx: createInnerTRPCContext({}),
-    transformer: superjson,
-  });
-
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const ssg = await ssgHelper();
   const session = getAuth(ctx.req);
 
   //If not authenticated, redirect to the home page
@@ -83,6 +65,15 @@ export const getServerSideProps = async (
   }
 
   const flat_id = Number(ctx.params?.flat_id);
+  if (isNaN(flat_id)) {
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    };
+  }
+
   const flatMateIds = await ssg.flat.getAllUserIdsInUserFlatByFlatId.fetch({
     id: flat_id,
   });
