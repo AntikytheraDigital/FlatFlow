@@ -44,7 +44,7 @@ export const flatRouter = createTRPCRouter({
       return await ctx.prisma.userFlat.findUnique({
         where: {
           userFlatId: {
-            userId: ctx.currentUser,
+            userId: ctx.userId,
             flatId: input.id,
           },
         },
@@ -82,14 +82,14 @@ export const flatRouter = createTRPCRouter({
     }),
 
   createFlat: privateProcedure.mutation(async ({ ctx }) => {
-    const userId = ctx.currentUser;
+    const userId = ctx.userId;
     const { success } = await ratelimit.limit(userId);
 
     if (!success) throw new TRPCError({ code: "TOO_MANY_REQUESTS" });
     // Creates tuple in User from userId if it doesn't exist
     await ctx.prisma.user.create({
       data: {
-        userId: ctx.currentUser,
+        userId: ctx.userId,
       },
     });
     // If not, create a new flat
@@ -111,7 +111,7 @@ export const flatRouter = createTRPCRouter({
   addUserToUserFlat: privateProcedure
     .input(z.object({ id: z.number() }))
     .mutation(async ({ ctx, input }) => {
-      const userId = ctx.currentUser;
+      const userId = ctx.userId;
       const { success } = await ratelimit.limit(userId);
 
       if (!success) throw new TRPCError({ code: "TOO_MANY_REQUESTS" });
@@ -156,7 +156,7 @@ export const flatRouter = createTRPCRouter({
   removeUserFromUserFlat: privateProcedure
     .input(z.object({ id: z.number() }))
     .mutation(async ({ ctx, input }) => {
-      const userId = ctx.currentUser;
+      const userId = ctx.userId;
 
       // Check if the flat exists
       const flat = await ctx.prisma.flat.findUnique({
