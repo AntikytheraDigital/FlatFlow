@@ -12,7 +12,7 @@ type UserProfile = {
 };
 
 type FlatPageProps = {
-  flat_id: number;
+  flat_id: string;
   flatmates: UserProfile[];
   userIds: string[];
 };
