@@ -27,7 +27,7 @@ export const flatRouter = createTRPCRouter({
     return ctx.prisma.flat.findMany();
   }),
   getUserFlatByFlatIdAndUserId: publicProcedure
-    .input(z.object({ flat_id: z.number(), user_id: z.string() }))
+    .input(z.object({ flat_id: z.string(), user_id: z.string() }))
     .query(async ({ ctx, input }) => {
       return await ctx.prisma.userFlat.findUnique({
         where: {
@@ -39,7 +39,7 @@ export const flatRouter = createTRPCRouter({
       });
     }),
   getUserFlatByFlatIdAndContext: privateProcedure
-    .input(z.object({ id: z.number() }))
+    .input(z.object({ id: z.string() }))
     .query(async ({ ctx, input }) => {
       return await ctx.prisma.userFlat.findUnique({
         where: {
@@ -51,7 +51,7 @@ export const flatRouter = createTRPCRouter({
       });
     }),
   getAllUserIdsInUserFlatByFlatId: publicProcedure
-    .input(z.object({ id: z.number() }))
+    .input(z.object({ id: z.string() }))
     .query(async ({ ctx, input }) => {
       // Fetch all UserFlat records associated with the flatId
       const userFlats = await ctx.prisma.userFlat.findMany({
@@ -66,7 +66,7 @@ export const flatRouter = createTRPCRouter({
       return usersIds;
     }),
   getAllUserIdsInUserFlat: privateProcedure
-    .input(z.object({ id: z.number() }))
+    .input(z.object({ id: z.string() }))
     .query(async ({ ctx, input }) => {
       // Fetch all UserFlat records associated with the flatId
       const userFlats = await ctx.prisma.userFlat.findMany({
@@ -109,7 +109,7 @@ export const flatRouter = createTRPCRouter({
     return flat;
   }),
   addUserToUserFlat: privateProcedure
-    .input(z.object({ id: z.number() }))
+    .input(z.object({ id: z.string() }))
     .mutation(async ({ ctx, input }) => {
       const userId = ctx.userId;
       const { success } = await ratelimit.limit(userId);
@@ -154,7 +154,7 @@ export const flatRouter = createTRPCRouter({
       return flat;
     }),
   removeUserFromUserFlat: privateProcedure
-    .input(z.object({ id: z.number() }))
+    .input(z.object({ id: z.string() }))
     .mutation(async ({ ctx, input }) => {
       const userId = ctx.userId;
 

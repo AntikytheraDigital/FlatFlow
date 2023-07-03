@@ -12,37 +12,53 @@ generator client {
 }
 
 model Flat {
-  id        Int        @id @default(autoincrement())
+  id        String        @id @default(uuid())
   createdAt DateTime @default(now())
   updatedAt DateTime   @updatedAt
   UserFlats UserFlat[]
-  Schedule Schedule?
+  Schedule Schedule[]
   joinUrl String?
   dinnerThreshold Int @default(2)
 }
 
 model User {
   userId String @id
-  name String @default("None")
+  name String @default("none")
+  UserFlats UserFlat[]
   color String?
+  Schedule Schedule[]
 }
 
 model Schedule{
-  flatId Int @id
+  flatId String
+  date DateTime @db.Date
+  userId String @default("none")
   Flat Flat @relation(fields: [flatId], references: [id])
-  schedule String?
-  availability String?
+  User User @relation(fields: [userId], references: [userId])
 
   @@index([flatId])
+  @@index([userId])
+  @@id([flatId, date])
 }
 
 model UserFlat {
-  userId String
-  flatId Int 
+  userId String 
+  flatId String 
   Flat   Flat   @relation(fields: [flatId], references: [id])
-  availability String?
-
+  User User @relation(fields: [userId], references: [userId])
+  difference Int @default(0)
+  UserAvailability UserAvailability[]
   @@index([flatId])
   @@id([userId, flatId])
   @@unique([userId, flatId], name: "userFlatId")
+}
+
+model UserAvailability{
+  userId String
+  flatId String
+  date DateTime @db.Date
+  isAvailable Boolean
+  UserFlat UserFlat @relation(fields: [userId, flatId], references: [userId, flatId])
+  @@id([userId, flatId, date])
+  @@index([userId, flatId])
 }

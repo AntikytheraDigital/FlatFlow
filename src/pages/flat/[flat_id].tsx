@@ -64,15 +64,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     };
   }
 
-  const flat_id = Number(ctx.params?.flat_id);
-  if (isNaN(flat_id)) {
-    return {
-      redirect: {
-        destination: "/",
-        permanent: false,
-      },
-    };
-  }
+  const flat_id = String(ctx.params?.flat_id);
 
   const flatMateIds = await ssg.flat.getAllUserIdsInUserFlatByFlatId.fetch({
     id: flat_id,
