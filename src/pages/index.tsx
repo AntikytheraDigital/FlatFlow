@@ -40,12 +40,13 @@ const CreateFlat = () => {
 /**
  * Test code for joining flat. Needs to be removed.
  */
-  const JoinFlat = () => {
-    const { user } = useUser();
-    const [flatId, setFlatId] = useState("");
-    const [successMessage, setSuccessMessage] = useState("");
-    
-    const { mutate, isLoading: isJoining } = api.flat.addUserToUserFlat.useMutation({
+const JoinFlat = () => {
+  const { user } = useUser();
+  const [flatId, setFlatId] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
+
+  const { mutate, isLoading: isJoining } =
+    api.flat.addUserToUserFlat.useMutation({
       onSuccess: (flat) => {
         setSuccessMessage(`Successfully joined flat: ${flat.id}`);
         setFlatId("");
@@ -55,34 +56,34 @@ const CreateFlat = () => {
       },
     });
 
-    const handleJoinFlat = (event: { preventDefault: () => void; }) => {
-      event.preventDefault();
+  const handleJoinFlat = (event: { preventDefault: () => void }) => {
+    event.preventDefault();
 
-      if (!user) return;
-      if (!flatId) return;
+    if (!user) return;
+    if (!flatId) return;
 
-      mutate({ id: Number(flatId) });
-    };
-
-    return (
-      <div>
-        <form onSubmit={handleJoinFlat} className="flex items-center space-x-2">
-          <input 
-            type="text" 
-            placeholder="Flat ID" 
-            value={flatId} 
-            onChange={(event) => setFlatId(event.target.value)}
-            disabled={isJoining}
-            className="bg-transparent border-b border-gray-500 focus:outline-none"
-          />
-          <button type="submit" disabled={isJoining} className="bg-transparent">
-            {isJoining ? <LoadingSpinner size={20} /> : "Join Flat"}
-          </button>
-        </form>
-        {successMessage && <p>{successMessage}</p>}
-      </div>
-    );
+    mutate({ id: String(flatId) });
   };
+
+  return (
+    <div>
+      <form onSubmit={handleJoinFlat} className="flex items-center space-x-2">
+        <input
+          type="text"
+          placeholder="Flat ID"
+          value={flatId}
+          onChange={(event) => setFlatId(event.target.value)}
+          disabled={isJoining}
+          className="border-b border-gray-500 bg-transparent focus:outline-none"
+        />
+        <button type="submit" disabled={isJoining} className="bg-transparent">
+          {isJoining ? <LoadingSpinner size={20} /> : "Join Flat"}
+        </button>
+      </form>
+      {successMessage && <p>{successMessage}</p>}
+    </div>
+  );
+};
 
 export default function Home() {
   const { isLoaded: userIsLoaded, isSignedIn } = useUser();
