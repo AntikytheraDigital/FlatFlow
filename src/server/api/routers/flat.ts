@@ -86,13 +86,13 @@ export const flatRouter = createTRPCRouter({
     const { success } = await ratelimit.limit(userId);
 
     if (!success) throw new TRPCError({ code: "TOO_MANY_REQUESTS" });
-    // Creates tuple in User from userId if it doesn't exist
-    await ctx.prisma.user.create({
-      data: {
-        userId: ctx.userId,
-      },
+    //Creates tuple in User from userId if it doesn't exist
+    await ctx.prisma.user.upsert({
+      where: { userId: userId },
+      update: {},
+      create: { userId: userId },
     });
-    // If not, create a new flat
+    //If not, create a new flat
     const flat = await ctx.prisma.flat.create({
       data: {},
     });
