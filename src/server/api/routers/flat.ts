@@ -4,7 +4,7 @@ import {
   createTRPCRouter,
   privateProcedure,
   publicProcedure,
-} from "~/server/api/trpc";
+} from "@/server/api/trpc";
 
 import { Ratelimit } from "@upstash/ratelimit"; // for deno: see above
 import { Redis } from "@upstash/redis";

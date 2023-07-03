@@ -1,7 +1,7 @@
 import { type NextPage, type GetServerSideProps } from "next";
 import Head from "next/head";
 import { getAuth } from "@clerk/nextjs/server";
-import { ssgHelper } from "~/server/api/helpers/ssgHelper";
+import { ssgHelper } from "@/server/api/helpers/ssgHelper";
 
 type FlatSettingsPageProps = {
   user_id: string;

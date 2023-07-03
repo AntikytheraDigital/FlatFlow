@@ -1,6 +1,6 @@
-import { createTRPCRouter } from "~/server/api/trpc";
-import { flatRouter } from "./routers/flat";
-import { profileRouter } from "./routers/profile";
+import { createTRPCRouter } from "@/server/api/trpc";
+import { flatRouter } from "@/server/api/routers/flat";
+import { profileRouter } from "@/server/api/routers/profile";
 
 /**
  * This is the primary router for your server.

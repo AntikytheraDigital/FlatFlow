@@ -1,5 +1,5 @@
 import Head from "next/head";
-import { api } from "~/utils/api";
+import { api } from "@/utils/api";
 import {
   SignInButton,
   SignOutButton,
@@ -7,7 +7,7 @@ import {
   SignedOut,
   useUser,
 } from "@clerk/nextjs";
-import { LoadingPage, LoadingSpinner } from "~/components/loading";
+import { LoadingPage, LoadingSpinner } from "@/components/loading";
 import { useState } from "react";
 
 const CreateFlat = () => {

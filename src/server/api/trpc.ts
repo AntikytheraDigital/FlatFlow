@@ -14,7 +14,7 @@ import {
 import { TRPCError, initTRPC } from "@trpc/server";
 import superjson from "superjson";
 import { ZodError } from "zod";
-import { prisma } from "~/server/db";
+import { prisma } from "@/server/db";
 
 import type * as trpcNext from "@trpc/server/adapters/next";
 

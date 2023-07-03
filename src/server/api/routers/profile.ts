@@ -5,7 +5,7 @@ import {
   createTRPCRouter,
   privateProcedure,
   publicProcedure,
-} from "~/server/api/trpc";
+} from "@/server/api/trpc";
 import { filterUserForClient } from "../helpers/filterUserForClient";
 
 export const profileRouter = createTRPCRouter({
