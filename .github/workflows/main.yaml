@@ -5,6 +5,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    environment: production
     steps:
     - uses: actions/checkout@v3
     - uses: actions/setup-node@v3
@@ -12,9 +13,3 @@ jobs:
         node-version: 16
     - run: npm install
     - run: npm run build
-      env:
-        NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: pk_test_d2lubmluZy1zdW5iZWFtLTg3LmNsZXJrLmFjY291bnRzLmRldiQ
-        UPSTASH_REDIS_REST_URL: https://huge-mite-41018.upstash.io
-        DATABASE_URL: ${{ secrets.DATABASE_URL }}
-        CLERK_SECRET_KEY: ${{ secrets.CLERK_SECRET_KEY}}
-        UPSTASH_REDIS_REST_TOKEN: ${{ secrets.UPSTASH_REDIS_REST_TOKEN}}
