@@ -28,6 +28,10 @@ const config = {
         prefer: "type-imports",
         fixStyle: "inline-type-imports",
       },
+      "error",
+        {
+          "checksVoidReturn": false
+        },
     ],
     "@typescript-eslint/no-unused-vars": ["warn", { argsIgnorePattern: "^_" }],
   },
