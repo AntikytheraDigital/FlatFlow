@@ -57,9 +57,12 @@ export default function Home() {
       </Head>
       <div className="container flex h-16 item-center justify-between py-4">
         <MainNav items={homeConfig.mainNav} />
-        <SignedOut>
-          <SignInButton mode='modal'/>
-        </SignedOut>
+        <div className="flex items-center space-x-2">
+          <ModeToggle />
+          <SignedOut>
+            <SignInButton mode='modal'/>
+          </SignedOut>
+        </div>
       </div>
       <div className="flex flex-col min-h-screen justify-between">
         <main className="flex justify-center">
@@ -83,9 +86,6 @@ export default function Home() {
             </SignedOut>
           </div>
         </main>
-        <footer>
-          <ModeToggle />
-        </footer>
       </div>
     </>
   );
