@@ -153,6 +153,31 @@ export const flatRouter = createTRPCRouter({
 
       return flat;
     }),
+    createFlatWithName: privateProcedure
+    .input(z.object({ name: z.string() }))
+    .mutation(async ({ ctx, input }) => {
+      const userId = ctx.userId;
+      const { success } = await ratelimit.limit(userId);
+
+      if (!success) throw new TRPCError({ code: "TOO_MANY_REQUESTS" });
+      
+      const flat = await ctx.prisma.flat.create({
+        data: {
+          name: input.name
+        },
+      });
+
+      // Associate the user with the new flat
+      await ctx.prisma.userFlat.create({
+        data: {
+          userId: userId,
+          flatId: flat.id,
+          name: input.name
+        },
+      });
+
+      return flat;
+    }),
   removeUserFromUserFlat: privateProcedure
     .input(z.object({ id: z.string() }))
     .mutation(async ({ ctx, input }) => {
