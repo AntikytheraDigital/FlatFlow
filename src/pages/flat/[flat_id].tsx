@@ -4,6 +4,10 @@ import Head from "next/head";
 import { getAuth } from "@clerk/nextjs/server";
 import Image from "next/image";
 import { ssgHelper } from "@/server/api/helpers/ssgHelper";
+import { UserAccountNav } from "@/components/user-nav-menu";
+import { useUser } from "@clerk/nextjs";
+import { MainNav } from "@/components/main-nav";
+import { flatConfig } from "config/flat";
 
 type UserProfile = {
   id: string;
@@ -19,12 +23,23 @@ type FlatPageProps = {
 
 const FlatPage: NextPage<FlatPageProps> = ({ flat_id, flatmates }) => {
   const router = useRouter();
+  const { user } = useUser();
+
+  if (!user) {
+    return null;
+  }
 
   return (
     <>
       <Head>
         <title>Flat view {flat_id}</title>
       </Head>
+      <MainNav items={flatConfig.mainNav} />
+      <UserAccountNav user={{
+        firstName: user.firstName,
+        profileImageUrl: user.profileImageUrl,
+      }}
+      />
       <div className="p-4">
         <h1 className="mb-4 text-2xl">Flat view {flat_id}</h1>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">
