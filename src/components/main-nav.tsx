@@ -5,8 +5,8 @@ import { useRouter } from "next/router"
 import { MainNavItem } from "types"
 import { siteConfig } from "config/site"
 import { cn } from "@/lib/utils"
-import { Icons } from "@/components/icons"
 import { MobileNav } from "@/components/mobile-nav"
+import { Icons } from "./icons"
 
 interface MainNavProps {
   items?: MainNavItem[]
@@ -21,7 +21,7 @@ export function MainNav({ items, children }: MainNavProps) {
   return (
     <div className="flex gap-6 md:gap-10">
       <Link href="/" className="hidden items-center space-x-2 md:flex">
-        <Icons.logo />
+        <img src="/favicon.ico" alt="logo"/>
         <span className="hidden font-bold sm:inline-block">
           {siteConfig.name}
         </span>
@@ -32,15 +32,16 @@ export function MainNav({ items, children }: MainNavProps) {
             <Link
               key={index}
               href={item.disabled ? "#" : item.href}
-              className={cn(
-                "flex items-center text-lg font-medium transition-colors hover:text-foreground/80 sm:text-sm",
+            >
+              <span className={cn(
+                "flex items-center text-lg font-medium transition-colors hover:text-foreground/80 sm:text-sm cursor-pointer",
                 item.href.startsWith(`/${segment}`)
                   ? "text-foreground"
                   : "text-foreground/60",
                 item.disabled && "cursor-not-allowed opacity-80"
-              )}
-            >
-              {item.title}
+              )}>
+                {item.title}
+              </span>
             </Link>
           ))}
         </nav>
@@ -49,7 +50,7 @@ export function MainNav({ items, children }: MainNavProps) {
         className="flex items-center space-x-2 md:hidden"
         onClick={() => setShowMobileMenu(!showMobileMenu)}
       >
-        {showMobileMenu ? <Icons.close /> : <Icons.logo />}
+        {showMobileMenu ? <Icons.close /> : <img src="/favicon.ico" alt="logo" className="h-6 w-6" />} 
         <span className="font-bold">Menu</span>
       </button>
       {showMobileMenu && items && (

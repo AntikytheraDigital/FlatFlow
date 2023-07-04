@@ -34,12 +34,15 @@ const FlatPage: NextPage<FlatPageProps> = ({ flat_id, flatmates }) => {
       <Head>
         <title>Flat view {flat_id}</title>
       </Head>
-      <MainNav items={flatConfig.mainNav} />
-      <UserAccountNav user={{
-        firstName: user.firstName,
-        profileImageUrl: user.profileImageUrl,
-      }}
-      />
+      <div className="container flex h-16 item-center justify-between py-4">
+        <MainNav items={flatConfig.mainNav} />
+        <UserAccountNav user={{
+          firstName: user.firstName,
+          profileImageUrl: user.profileImageUrl,
+        }}
+        flatId={flat_id}
+        />
+      </div>
       <div className="p-4">
         <h1 className="mb-4 text-2xl">Flat view {flat_id}</h1>
         <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 md:grid-cols-3">

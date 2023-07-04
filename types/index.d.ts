@@ -42,3 +42,8 @@ export type FlatConfig = {
     mainNav: MainNavItem[]
     sidebarNav: SidebarNavItem[]
 }
+
+export type HomeConfig = {
+  mainNav: MainNavItem[]
+  sidebarNav: SidebarNavItem[]
+}
