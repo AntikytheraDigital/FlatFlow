@@ -1,30 +1,33 @@
-import Link from "next/link"
-import { useUser, useClerk } from '@clerk/nextjs';
+import Link from "next/link";
+import { useClerk } from "@clerk/nextjs";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { UserAvatar } from "@/components/user-avatar"
-import { User } from "@clerk/nextjs/dist/types/server/clerkClient";
-import { AvatarProps } from "@radix-ui/react-avatar"
-
+} from "@/components/ui/dropdown-menu";
+import { UserAvatar } from "@/components/user-avatar";
+import { type User } from "@clerk/nextjs/dist/types/server/clerkClient";
+import { type AvatarProps } from "@radix-ui/react-avatar";
 
 interface UserNavMenuProps extends AvatarProps {
-  user: Pick<User, "firstName" | "profileImageUrl">
-  flatId: string
+  user: Pick<User, "firstName" | "profileImageUrl">;
+  flatId: string;
 }
 
-export function UserAccountNav({ user, flatId }: UserNavMenuProps) { // Include flatId in function parameters
+export function UserAccountNav({ user, flatId }: UserNavMenuProps) {
+  // Include flatId in function parameters
   const { signOut, user: currentUser } = useClerk();
-  if(!currentUser) return null
+  if (!currentUser) return null;
   return (
     <DropdownMenu>
       <DropdownMenuTrigger>
         <UserAvatar
-          user={{ firstName: user.firstName || null, profileImageUrl: user.profileImageUrl}}
+          user={{
+            firstName: user.firstName || null,
+            profileImageUrl: user.profileImageUrl,
+          }}
           className="h-8 w-8"
         />
       </DropdownMenuTrigger>
@@ -45,14 +48,13 @@ export function UserAccountNav({ user, flatId }: UserNavMenuProps) { // Include 
         <DropdownMenuItem
           className="cursor-pointer"
           onSelect={(event) => {
-            event.preventDefault()
-            signOut()
+            event.preventDefault();
+            void signOut();
           }}
         >
           Sign out
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
-  )
+  );
 }
-
