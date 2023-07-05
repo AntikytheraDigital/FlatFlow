@@ -1,4 +1,4 @@
-import { Button, ButtonProps } from "@/components/ui/button";
+import { Button, type ButtonProps } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useUser } from "@clerk/nextjs";
@@ -13,22 +13,22 @@ const CreateFlat = () => {
   const { user } = useUser();
   const [flatName, setFlatName] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
-  
-  const router = useRouter(); 
+
+  const router = useRouter();
 
   const { mutate, isLoading: isCreating } =
     api.flat.createFlatWithName.useMutation({
       onSuccess: (flat) => {
         setSuccessMessage(`Successfully created flat: ${flat.id}`);
         setFlatName("");
-        router.push(`/flat/${flat.id}`);
+        void router.push(`/flat/${flat.id}`);
       },
       onError: (error) => {
         console.log(error);
       },
     });
 
-  const handleCreateFlat = async (event: React.FormEvent) => {
+  const handleCreateFlat = (event: React.FormEvent) => {
     event.preventDefault();
 
     if (!user || !flatName) return;
@@ -43,15 +43,15 @@ const CreateFlat = () => {
   return (
     <div className="grid w-full max-w-sm items-center space-x-2">
       <Label htmlFor="flatName">Create flat</Label>
-      <Input 
+      <Input
         type="text"
         id="flatName"
         value={flatName}
         onChange={(event) => setFlatName(event.target.value)}
         disabled={isCreating}
-        placeholder="Flat Name" 
+        placeholder="Flat Name"
       />
-      <Button 
+      <Button
         onClick={handleCreateFlat}
         disabled={isCreating}
         variant="default"
@@ -72,22 +72,22 @@ const JoinFlat = () => {
   const { user } = useUser();
   const [flatId, setFlatId] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
-  
-  const router = useRouter(); 
+
+  const router = useRouter();
 
   const { mutate, isLoading: isJoining } =
     api.flat.addUserToUserFlat.useMutation({
       onSuccess: (flat) => {
         setSuccessMessage(`Successfully joined flat: ${flat.id}`);
         setFlatId("");
-        router.push(`/flat/${flat.id}`);
+        void router.push(`/flat/${flat.id}`);
       },
       onError: (error) => {
         console.log(error);
       },
     });
 
-  const handleJoinFlat = async (event: React.FormEvent) => {
+  const handleJoinFlat = (event: React.FormEvent) => {
     event.preventDefault();
 
     if (!user || !flatId) return;
@@ -102,19 +102,15 @@ const JoinFlat = () => {
   return (
     <div className="grid w-full max-w-sm items-center space-x-2">
       <Label htmlFor="flatId">Join flat</Label>
-      <Input 
+      <Input
         type="text"
         id="flatId"
         value={flatId}
         onChange={(event) => setFlatId(event.target.value)}
         disabled={isJoining}
-        placeholder="Flat ID" 
+        placeholder="Flat ID"
       />
-      <Button 
-        onClick={handleJoinFlat}
-        disabled={isJoining}
-        variant="default"
-      >
+      <Button onClick={handleJoinFlat} disabled={isJoining} variant="default">
         {isJoining ? (
           <Icons.spinner className="mr-2 h-4 w-4 animate-spin" />
         ) : (
