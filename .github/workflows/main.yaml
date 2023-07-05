@@ -1,4 +1,4 @@
-name: npm run build
+name: Run Tests
 on: 
   pull_request:
     branches: [ main ]
@@ -18,3 +18,4 @@ jobs:
         DATABASE_URL: ${{ secrets.DEV_DATABASE_URL}}
         CLERK_SECRET_KEY: ${{ secrets.CLERK_SECRET_KEY}}
         UPSTASH_REDIS_REST_TOKEN: ${{ secrets.UPSTASH_REDIS_REST_TOKEN}}
+    - run: npm run test
