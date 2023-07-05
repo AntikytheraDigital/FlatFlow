@@ -5,32 +5,21 @@ import {
   SignedIn,
   SignedOut,
   useUser,
-} from "@clerk/nextjs";
+} 
+from "@clerk/nextjs";
 import { LoadingPage } from "@/components/loading";
 import { ModeToggle } from "@/components/theme-toggle";
 import { buttonVariants } from "@/components/ui/button";
 import Link from "next/link";
 import { MainNav } from "@/components/main-nav";
 import { homeConfig } from "config/home";
-
-// to display the title 'Flat Flow'
-const FlatFlow = () => {
-  const { user } = useUser();
-  return <p>Flat Flow</p>;
-};
+import { DashboardHeader } from "@/components/header";
 
 const GetCooking = () => {
-  const { user } = useUser();
-
-  const handleGetCooking = (event: React.FormEvent) => {
-    event.preventDefault();
-    if (!user) return;
-    // need to put what will happen when button is clicked here I think
-  };
   return (
     <div className="grid w-full max-w-sm items-center space-x-2">
       <Link href="/dashboard" className={buttonVariants()}>
-        Get Cookin
+        Get Cookin&#39;
       </Link>
     </div>
   );
@@ -40,8 +29,8 @@ export default function Home() {
   const { isLoaded: userIsLoaded, isSignedIn } = useUser();
 
   if (!userIsLoaded) return <LoadingPage />;
-  // if (isSignedIn) return <p>Redirecting...</p>;    // would be good to uncomment when the auth stuff is setup
-
+  //if (isSignedIn) return <p>Redirecting...</p>;    // would be good to uncomment when the auth stuff is setup
+  
   return (
     <>
       <Head>
@@ -57,22 +46,19 @@ export default function Home() {
           </SignedOut>
         </div>
       </div>
-      <div className="flex min-h-screen flex-col justify-between">
-        <main className="flex justify-center">
+      <div className="flex flex-col items-center">
+        <main>
           <div>
             <SignedIn>
               <SignOutButton />
-              <div></div>
-              <div></div>
             </SignedIn>
             <SignedOut>
-              <div>
-                <FlatFlow />
+              <div className="mt-20">
+                <DashboardHeader heading = "Flat Flow" text = "schedule dinners simply." />
               </div>
-              <div>
-                <p>schedule dinners simply. </p>
+              <div className = "mt-10">              
+                <GetCooking />
               </div>
-              <GetCooking />
             </SignedOut>
           </div>
         </main>
