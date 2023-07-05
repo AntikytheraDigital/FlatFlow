@@ -1,4 +1,4 @@
-import { HomeConfig } from "types"
+import { type HomeConfig } from "types";
 
 export const homeConfig: HomeConfig = {
   mainNav: [
@@ -12,6 +12,5 @@ export const homeConfig: HomeConfig = {
       disabled: true,
     },
   ],
-  sidebarNav: [
-  ],
-}
+  sidebarNav: [],
+};

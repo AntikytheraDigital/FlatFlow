@@ -1,11 +1,11 @@
-import { AvatarProps } from "@radix-ui/react-avatar"
-import { User } from '@clerk/clerk-sdk-node'; 
+import { type AvatarProps } from "@radix-ui/react-avatar";
+import { type User } from "@clerk/clerk-sdk-node";
 
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { Icons } from "@/components/icons"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Icons } from "@/components/icons";
 
 interface UserAvatarProps extends AvatarProps {
-    user: Pick<User, "firstName" | "profileImageUrl">
+  user: Pick<User, "firstName" | "profileImageUrl">;
 }
 
 export function UserAvatar({ user, ...props }: UserAvatarProps) {
@@ -20,5 +20,5 @@ export function UserAvatar({ user, ...props }: UserAvatarProps) {
         </AvatarFallback>
       )}
     </Avatar>
-  )
+  );
 }

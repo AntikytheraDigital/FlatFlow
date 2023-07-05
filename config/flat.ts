@@ -1,4 +1,4 @@
-import { FlatConfig } from "types"
+import { type FlatConfig } from "types";
 
 export const flatConfig: FlatConfig = {
   mainNav: [
@@ -29,4 +29,4 @@ export const flatConfig: FlatConfig = {
       icon: "settings",
     },
   ],
-}
+};
