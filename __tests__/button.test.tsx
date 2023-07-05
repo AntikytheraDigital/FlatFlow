@@ -17,12 +17,6 @@ describe("Button Component", () => {
   render(<Button onClick={onclick}>Sample Text</Button>);
   const button = screen.getByTestId("button");
 
-  //Test 1
-  test("Button Rendering", () => {
-    expect(button).toBeInTheDocument();
-  });
-
-  //Test 2
   test("Button Text", () => {
     expect(button).toHaveTextContent("Sample Text");
   });
