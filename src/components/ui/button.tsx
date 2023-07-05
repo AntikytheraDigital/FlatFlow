@@ -1,3 +1,5 @@
+//Path: src/components/ui/button.tsx
+
 import * as React from "react";
 import { type VariantProps, cva } from "class-variance-authority";
 
@@ -42,6 +44,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
         className={cn(buttonVariants({ variant, size, className }))}
         ref={ref}
         {...props}
+        data-testid="button"
       />
     );
   }
