@@ -29,7 +29,7 @@ export default function Home() {
   const { isLoaded: userIsLoaded, isSignedIn } = useUser();
 
   if (!userIsLoaded) return <LoadingPage />;
-  //if (isSignedIn) return <p>Redirecting...</p>;    // would be good to uncomment when the auth stuff is setup
+  //if (isSignedIn) return <p>Redirecting...</p>;    // would be good to uncomment when the auth stuff is setup 
   
   return (
     <>
