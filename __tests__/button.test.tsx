@@ -49,6 +49,4 @@ describe("Button component", () => {
     buttonElement.focus();
     expect(handleFocus).toHaveBeenCalledTimes(1);
   });
-
-  // Add more test cases as needed
 });
