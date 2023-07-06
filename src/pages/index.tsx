@@ -5,8 +5,7 @@ import {
   SignedIn,
   SignedOut,
   useUser,
-} 
-from "@clerk/nextjs";
+} from "@clerk/nextjs";
 import { LoadingPage } from "@/components/loading";
 import { ModeToggle } from "@/components/theme-toggle";
 import { buttonVariants } from "@/components/ui/button";
@@ -14,6 +13,7 @@ import Link from "next/link";
 import { MainNav } from "@/components/main-nav";
 import { homeConfig } from "config/home";
 import { DashboardHeader } from "@/components/header";
+import React from "react";
 
 const GetCooking = () => {
   return (
@@ -29,8 +29,8 @@ export default function Home() {
   const { isLoaded: userIsLoaded, isSignedIn } = useUser();
 
   if (!userIsLoaded) return <LoadingPage />;
-  //if (isSignedIn) return <p>Redirecting...</p>;    // would be good to uncomment when the auth stuff is setup 
-  
+  //if (isSignedIn) return <p>Redirecting...</p>;    // would be good to uncomment when the auth stuff is setup
+
   return (
     <>
       <Head>
@@ -54,9 +54,12 @@ export default function Home() {
             </SignedIn>
             <SignedOut>
               <div className="mt-20">
-                <DashboardHeader heading = "Flat Flow" text = "schedule dinners simply." />
+                <DashboardHeader
+                  heading="Flat Flow"
+                  text="schedule dinners simply."
+                />
               </div>
-              <div className = "mt-10">              
+              <div className="mt-10">
                 <GetCooking />
               </div>
             </SignedOut>

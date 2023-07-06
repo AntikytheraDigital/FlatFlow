@@ -3,17 +3,24 @@ import { api } from "@/utils/api";
 import "@/styles/global.css";
 import { ClerkProvider } from "@clerk/nextjs";
 import { ThemeProvider } from "@/components/theme-provider";
-import Navbar from "@/components/Navbar";
+import React from "react";
+import { dark } from "@clerk/themes";
 
 const MyApp: AppType = ({ Component, pageProps }) => {
   return (
     <>
-    <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
-      <ClerkProvider {...pageProps}>
-        {/* <Navbar /> */}
-      <Component {...pageProps} />
-    </ClerkProvider>
-    </ThemeProvider>
+      <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
+        <ClerkProvider
+          appearance={{
+            baseTheme: dark,
+            layout: {
+              logoPlacement: "inside",
+            },
+          }}
+        >
+          <Component {...pageProps} />
+        </ClerkProvider>
+      </ThemeProvider>
     </>
   );
 };
