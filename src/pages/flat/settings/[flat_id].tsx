@@ -1,18 +1,50 @@
 import { type NextPage, type GetServerSideProps } from "next";
-import Head from "next/head";
 import { getAuth } from "@clerk/nextjs/server";
 import { ssgHelper } from "@/server/api/helpers/ssgHelper";
 import { prisma } from "@/server/db";
+import { MainNav } from "@/components/main-nav";
+import { UserAccountNav } from "@/components/user-nav-menu";
+import { useUser } from "@clerk/nextjs";
+import { userSettingsConfig } from "config/usersettings";
+import { Separator } from "@/components/ui/separator";
+import { Form } from "@/components/ui/form";
+import { FlatSettingsForm } from "@/components/flat-settings-form";
 
 type FlatSettingsPageProps = {
   flat_id: string;
 };
 
 const FlatSettingsPage: NextPage<FlatSettingsPageProps> = ({ flat_id }) => {
+  const { user } = useUser();
+
+  if (!user) return null;
+
+  const config = userSettingsConfig(flat_id);
+
   return (
     <>
+      <div className="item-center container flex h-16 justify-between py-4">
+        <MainNav items={config.mainNav} />
+        <UserAccountNav
+          user={{
+            firstName: user.firstName,
+            profileImageUrl: user.profileImageUrl,
+          }}
+          flatId={flat_id}
+        />
+      </div>
       <div className="p-4">
         <h1 className="mb-4 text-2xl">Flat settings for flat id: {flat_id}</h1>
+      </div>
+      <div className="space-y-6">
+        <div>
+          <h3 className="text-lg font-medium">Profile</h3>
+          <p className="text-sm text-muted-foreground">
+            This is how others will see you on the site.
+          </p>
+        </div>
+        <Separator />
+        <FlatSettingsForm />
       </div>
     </>
   );
