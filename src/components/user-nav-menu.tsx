@@ -10,6 +10,7 @@ import {
 import { UserAvatar } from "@/components/user-avatar";
 import { type User } from "@clerk/nextjs/dist/types/server/clerkClient";
 import { type AvatarProps } from "@radix-ui/react-avatar";
+import React from "react";
 
 interface UserNavMenuProps extends AvatarProps {
   user: Pick<User, "firstName" | "profileImageUrl">;
@@ -39,7 +40,7 @@ export function UserAccountNav({ user, flatId }: UserNavMenuProps) {
         </div>
         <DropdownMenuSeparator />
         <DropdownMenuItem asChild>
-          <Link href={`/user/settings/${currentUser.id}`}>User Settings</Link>
+          <Link href={`/user/settings`}>User Settings</Link>
         </DropdownMenuItem>
         <DropdownMenuItem asChild>
           <Link href={`/flat/settings/${flatId}`}>Flat Settings</Link>

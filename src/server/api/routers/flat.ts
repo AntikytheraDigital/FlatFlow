@@ -153,17 +153,17 @@ export const flatRouter = createTRPCRouter({
 
       return flat;
     }),
-    createFlatWithName: privateProcedure
+  createFlatWithName: privateProcedure
     .input(z.object({ name: z.string() }))
     .mutation(async ({ ctx, input }) => {
       const userId = ctx.userId;
       const { success } = await ratelimit.limit(userId);
 
       if (!success) throw new TRPCError({ code: "TOO_MANY_REQUESTS" });
-      
+
       const flat = await ctx.prisma.flat.create({
         data: {
-          name: input.name
+          name: input.name,
         },
       });
 
@@ -172,7 +172,7 @@ export const flatRouter = createTRPCRouter({
         data: {
           userId: userId,
           flatId: flat.id,
-          name: input.name
+          name: input.name,
         },
       });
 
@@ -222,5 +222,26 @@ export const flatRouter = createTRPCRouter({
       }
 
       return flat;
+    }),
+  getSingleFlatIdByUserId: publicProcedure
+    .input(z.object({ id: z.string() }))
+    .query(async ({ ctx, input }) => {
+      const userFlats = await ctx.prisma.userFlat.findMany({
+        where: {
+          userId: input.id,
+        },
+      });
+
+      if (!userFlats) {
+        throw new TRPCError({ code: "NOT_FOUND" });
+      }
+
+      const userFlat = userFlats[0];
+
+      if (!userFlat) {
+        throw new TRPCError({ code: "NOT_FOUND" });
+      }
+
+      return userFlat.flatId;
     }),
 });

@@ -1,49 +1,54 @@
-import { User } from "@prisma/client"
-import type { Icon } from "lucide-react"
+import { User } from "@prisma/client";
+import type { Icon } from "lucide-react";
 
-import { Icons } from "@/components/icons"
+import { type Icons } from "@/components/icons";
 
 export type NavItem = {
-  title: string
-  href: string
-  disabled?: boolean
-}
+  title: string;
+  href: string;
+  disabled?: boolean;
+};
 
-export type MainNavItem = NavItem
+export type MainNavItem = NavItem;
 
 export type SidebarNavItem = {
-  title: string
-  disabled?: boolean
-  external?: boolean
-  icon?: keyof typeof Icons
+  title: string;
+  disabled?: boolean;
+  external?: boolean;
+  icon?: keyof typeof Icons;
 } & (
   | {
-      href: string
-      items?: never
+      href: string;
+      items?: never;
     }
   | {
-      href?: string
-      items: NavLink[]
+      href?: string;
+      items: NavLink[];
     }
-)
+);
 
 export type SiteConfig = {
-  name: string
-  description: string
-  url: string
-  ogImage: string
+  name: string;
+  description: string;
+  url: string;
+  ogImage: string;
   links: {
-    twitter: string
-    github: string
-  }
-}
+    twitter: string;
+    github: string;
+  };
+};
 
 export type FlatConfig = {
-    mainNav: MainNavItem[]
-    sidebarNav: SidebarNavItem[]
-}
+  mainNav: MainNavItem[];
+  sidebarNav: SidebarNavItem[];
+};
 
 export type HomeConfig = {
-  mainNav: MainNavItem[]
-  sidebarNav: SidebarNavItem[]
-}
+  mainNav: MainNavItem[];
+  sidebarNav: SidebarNavItem[];
+};
+
+export type UserSettingsConfig = {
+  mainNav: MainNavItem[];
+  sidebarNav: SidebarNavItem[];
+};
