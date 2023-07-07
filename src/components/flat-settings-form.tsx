@@ -17,22 +17,23 @@ import { toast } from "./ui/use-toast";
 import UserSettingsLayout from "./user-settings-layout";
 
 const formSchema = z.object({
-  username: z.string().min(2).max(50),
+  flatname: z.string().min(2).max(50),
+  availability: z.array(z.string()),
 });
 
 type FlatSettingsFormValues = z.infer<typeof formSchema>;
 
 export function FlatSettingsForm() {
-  // ...
-  const form = useForm<z.infer<typeof formSchema>>({
+  const form = useForm<FlatSettingsFormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      username: "",
+      flatname: "",
+      availability: [],
     },
     mode: "onChange",
   });
 
-  function onSubmit(data: FlatSettingsFormValues) {
+  const onSubmit = (data: FlatSettingsFormValues) => {
     console.log("memexd");
     toast({
       title: "You submitted the following values:",
@@ -42,7 +43,31 @@ export function FlatSettingsForm() {
         </pre>
       ),
     });
-  }
+  };
+
+  const { register, setValue } = form;
+  const daysOfWeek = [
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+    "Sunday",
+  ];
+
+  const handleCheck = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.target.value;
+    const currentAvailability = form.getValues("availability");
+    if (e.target.checked) {
+      setValue("availability", [...currentAvailability, value]);
+    } else {
+      setValue(
+        "availability",
+        currentAvailability.filter((day: string) => day !== value)
+      );
+    }
+  };
 
   return (
     <UserSettingsLayout>
@@ -50,15 +75,44 @@ export function FlatSettingsForm() {
         <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
           <FormField
             control={form.control}
-            name="username"
+            name="flatname"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Username</FormLabel>
+                <FormLabel>Flat Name</FormLabel>
                 <FormControl>
                   <Input placeholder="test" {...field} />
                 </FormControl>
                 <FormDescription>
-                  This is your public display name.
+                  This is your flats display name.
+                </FormDescription>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="availability"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Availability</FormLabel>
+                <FormControl>
+                  <div className="checkbox-container">
+                    {daysOfWeek.map((day, i) => (
+                      <div key={i}>
+                        <input
+                          type="checkbox"
+                          id={`day-${i}`}
+                          value={day}
+                          {...register("availability")}
+                          onChange={handleCheck}
+                        />
+                        <label htmlFor={`day-${i}`}>{day.charAt(0)}</label>
+                      </div>
+                    ))}
+                  </div>
+                </FormControl>
+                <FormDescription>
+                  Select the days you are available.
                 </FormDescription>
                 <FormMessage />
               </FormItem>

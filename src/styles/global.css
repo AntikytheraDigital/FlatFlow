@@ -2,10 +2,36 @@
 @tailwind components;
 @tailwind utilities;
  
-/* body {
-  @apply bg-black text-slate-100;
+.checkbox-container {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
 }
- */
+
+.checkbox-container div {
+  margin-right: 10px; 
+}
+
+.checkbox-container input[type='checkbox'] {
+  display: none;
+}
+
+.checkbox-container label {
+  display: inline-block;
+  width: 30px;
+  height: 30px;
+  background-color: #ccc;
+  color: #fff;
+  border-radius: 50%;
+  text-align: center;
+  line-height: 30px;
+  user-select: none;
+}
+
+.checkbox-container input[type='checkbox']:checked + label {
+  background-color: #4caf50;
+}
+
 @layer base {
   :root {
     --background: 0 0% 100%;

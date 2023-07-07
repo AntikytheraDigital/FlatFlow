@@ -38,9 +38,10 @@ const FlatSettingsPage: NextPage<FlatSettingsPageProps> = ({ flat_id }) => {
       </div>
       <div className="space-y-6">
         <div>
-          <h3 className="text-lg font-medium">Profile</h3>
+          <h3 className="text-lg font-medium">Flat Settings</h3>
           <p className="text-sm text-muted-foreground">
-            This is how others will see you on the site.
+            This is will affect how you flat is displayed and how your schedule
+            works.
           </p>
         </div>
         <Separator />
