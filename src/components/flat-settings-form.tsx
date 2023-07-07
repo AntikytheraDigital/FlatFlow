@@ -9,32 +9,54 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import Link from "next/link";
 import { Input } from "@/components/ui/input";
-import { useForm } from "react-hook-form";
+import { useForm, useFieldArray } from "react-hook-form";
 import * as z from "zod";
 import { toast } from "./ui/use-toast";
 import UserSettingsLayout from "./user-settings-layout";
 
+const memberSchema = z.object({
+  name: z.string(),
+  availability: z.array(z.string()),
+});
+
 const formSchema = z.object({
   flatname: z.string().min(2).max(50),
-  availability: z.array(z.string()),
+  members: z.array(memberSchema),
 });
 
 type FlatSettingsFormValues = z.infer<typeof formSchema>;
 
-export function FlatSettingsForm() {
+type FlatSettingsFormProps = {
+  flatmates: UserProfile[];
+};
+
+type UserProfile = {
+  id: string;
+  firstName: string | null;
+  picture: string;
+};
+
+export function FlatSettingsForm({ flatmates }: FlatSettingsFormProps) {
   const form = useForm<FlatSettingsFormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       flatname: "",
-      availability: [],
+      members: flatmates.map((mate) => ({
+        name: mate.firstName ?? "",
+        availability: [],
+      })),
     },
     mode: "onChange",
   });
 
+  const { fields } = useFieldArray({
+    control: form.control,
+    name: "members",
+  });
+
   const onSubmit = (data: FlatSettingsFormValues) => {
-    console.log("memexd");
+    console.log("Submitted values:", data);
     toast({
       title: "You submitted the following values:",
       description: (
@@ -56,14 +78,20 @@ export function FlatSettingsForm() {
     "Sunday",
   ];
 
-  const handleCheck = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleCheck = (
+    index: number,
+    e: React.ChangeEvent<HTMLInputElement>
+  ) => {
     const value = e.target.value;
-    const currentAvailability = form.getValues("availability");
+    const currentAvailability = form.getValues(`members.${index}.availability`);
     if (e.target.checked) {
-      setValue("availability", [...currentAvailability, value]);
+      setValue(`members.${index}.availability`, [
+        ...currentAvailability,
+        value,
+      ]);
     } else {
       setValue(
-        "availability",
+        `members.${index}.availability`,
         currentAvailability.filter((day: string) => day !== value)
       );
     }
@@ -89,35 +117,25 @@ export function FlatSettingsForm() {
               </FormItem>
             )}
           />
-          <FormField
-            control={form.control}
-            name="availability"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Availability</FormLabel>
-                <FormControl>
-                  <div className="checkbox-container">
-                    {daysOfWeek.map((day, i) => (
-                      <div key={i}>
-                        <input
-                          type="checkbox"
-                          id={`day-${i}`}
-                          value={day}
-                          {...register("availability")}
-                          onChange={handleCheck}
-                        />
-                        <label htmlFor={`day-${i}`}>{day.charAt(0)}</label>
-                      </div>
-                    ))}
+          {fields.map((memberField, index) => (
+            <div key={memberField.id}>
+              <FormLabel>{memberField.name}&apos;s Availability</FormLabel>
+              <div className="checkbox-container">
+                {daysOfWeek.map((day, i) => (
+                  <div key={i}>
+                    <input
+                      type="checkbox"
+                      id={`day-${i}-${index}`}
+                      value={day}
+                      {...register(`members.${index}.availability`)}
+                      onChange={(e) => handleCheck(index, e)}
+                    />
+                    <label htmlFor={`day-${i}-${index}`}>{day.charAt(0)}</label>
                   </div>
-                </FormControl>
-                <FormDescription>
-                  Select the days you are available.
-                </FormDescription>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+                ))}
+              </div>
+            </div>
+          ))}
           <Button type="submit">Submit</Button>
         </form>
       </Form>

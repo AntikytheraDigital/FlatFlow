@@ -10,11 +10,21 @@ import { Separator } from "@/components/ui/separator";
 import { Form } from "@/components/ui/form";
 import { FlatSettingsForm } from "@/components/flat-settings-form";
 
-type FlatSettingsPageProps = {
-  flat_id: string;
+type UserProfile = {
+  id: string;
+  firstName: string | null;
+  picture: string;
 };
 
-const FlatSettingsPage: NextPage<FlatSettingsPageProps> = ({ flat_id }) => {
+type FlatSettingsPageProps = {
+  flat_id: string;
+  flatmates: UserProfile[];
+};
+
+const FlatSettingsPage: NextPage<FlatSettingsPageProps> = ({
+  flat_id,
+  flatmates,
+}) => {
   const { user } = useUser();
 
   if (!user) return null;
@@ -45,7 +55,7 @@ const FlatSettingsPage: NextPage<FlatSettingsPageProps> = ({ flat_id }) => {
           </p>
         </div>
         <Separator />
-        <FlatSettingsForm />
+        <FlatSettingsForm flatmates={flatmates} />
       </div>
     </>
   );
@@ -67,7 +77,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   });
 
   // If the flat does not exist, redirect the user.
-  if (!flat) {
+  if (!flat || typeof flatId !== "string" || !session.userId) {
     return {
       redirect: {
         destination: "/",
@@ -76,9 +86,35 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     };
   }
 
+  const flatMateIds = await ssg.flat.getAllUserIdsInUserFlatByFlatId.fetch({
+    id: flatId,
+  });
+
+  //Simple rerouting if the user is not part of the flat
+  if (!flatMateIds.includes(session.userId)) {
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    };
+  }
+
+  const flatmates: UserProfile[] = await Promise.all(
+    flatMateIds.map(async (id: string) => {
+      const user = await ssg.profile.getUserById.fetch({ id });
+      return {
+        id: user.id,
+        firstName: user.firstName,
+        picture: user.profileImageUrl,
+      };
+    })
+  );
+
   return {
     props: {
       flat_id: flatId,
+      flatmates,
     },
   };
 };
